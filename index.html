@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2f3;
+            text-align: center;
+            padding-top: 50px;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        input {
+            padding: 10px;
+            font-size: 16px;
+            width: 250px;
+            margin: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Weather Checker</h1>
+        <input type="text" id="locationInput" placeholder="Enter location (e.g., Bahawalpur)">
+        <button onclick="getWeather()">Get Temperature</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function getWeather() {
+            const location = document.getElementById('locationInput').value.trim();
+            const apiKey = 'd548438f1e444c6da8d90321250905';
+            const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${encodeURIComponent(location)}&aqi=yes`;
+
+            if (!location) {
+                document.getElementById('result').innerHTML = 'Please enter a location.';
+                return;
+            }
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Location not found or API error.");
+                const data = await response.json();
+                const temp = data.current.temp_c;
+                document.getElementById('result').innerHTML = `The temperature in <strong>${data.location.name}</strong> is <strong>${temp}°C</strong>.`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = `Error: ${error.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
